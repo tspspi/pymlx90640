@@ -20,6 +20,8 @@ class MLX90640:
         self._cols = 32
         self._npixels = self._rows * self._cols
 
+        self.frameCallback = []
+
         self._emissivity = emissivity
 
         # Quickly verify communication is working ...
@@ -97,6 +99,32 @@ class MLX90640:
     def __exit__(self, type, value, tb):
         return
 
+    # The open and close methods are just provided to mimic the interface
+    # of the simplepycam V4L wrapper
+    def open(self):
+        pass
+    def close(self):
+        pass
+    def streamOn(self):
+        pass
+    def streamOff(self):
+        pass
+
+    # The following wrappers are used to mimic the behavior of the simplepycam
+    # V4L wrapper:
+
+    def stream(self):
+        while True:
+            frame = self._fetch_frame_sync()
+            abrt = True
+            for cb in self.frameCallback:
+                abrt = abrt and cb(self, frame)
+            if not abrt:
+                break
+    def nextFrame(self):
+        frame = self._fetch_frame_sync()
+        return frame
+
 
 
     def _get_id(self):
@@ -141,6 +169,8 @@ class MLX90640:
             return True
         return False
 
+    def fetch_frame(self):
+        return self._fetch_frame_sync()
 
     def _fetch_frame_sync(self):
         rawframe = self._fetch_raw_frame_sync()
