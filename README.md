@@ -6,6 +6,8 @@ associated with the manufacturer). It uses a simple I2C wrapper to
 access the sensor and can be used on platforms like the RaspberryPi.
 Details are described [in the accompanying blog article](https://www.tspi.at/2024/03/31/pimlx90640py.html)
 
+![](https://raw.githubusercontent.com/tspspi/pymlx90640/master/examples/capture.png)
+
 ## Required I2C library
 
 The I2C library is not contained in the requirements since it follows
